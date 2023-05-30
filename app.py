@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import request
 from chat_downloader import ChatDownloader
 import json
 
@@ -8,7 +9,7 @@ app = Flask(__name__)
 @app.get('/')
 def index():
     try:
-        chat = ChatDownloader().get_chat("https://www.youtube.com/watch?v=" + url)
+        chat = ChatDownloader().get_chat("https://www.youtube.com/watch?v=" + request.args.get('id'))
         chat_data = []
         for message in chat:
             message["author"]["images"] = message["author"]["images"][2]["url"]
