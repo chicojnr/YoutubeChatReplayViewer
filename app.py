@@ -9,7 +9,7 @@ app = Flask(__name__)
 @app.get('/')
 def index():
     try:
-        chat = ChatDownloader().get_chat("https://www.youtube.com/watch?v=" + request.args.get('id'), message_groups=['superchat'])
+        chat = ChatDownloader().get_chat("https://www.youtube.com/watch?v=" + request.args.get('id'), message_groups=['messages'])
         chat_data = []
         for message in chat:
             message["author"]["images"] = message["author"]["images"][2]["url"]
