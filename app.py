@@ -1,10 +1,23 @@
-from flask import Flask
-from flask import request
+from flask import Flask, request, jsonify
 from chat_downloader import ChatDownloader
+import gc
 import json
 
 
 app = Flask(__name__)
+
+@app.after_request
+def cleanup(response):
+    global request_counter
+
+    # Incrementa o contador de requisições
+    request_counter += 1
+
+    # Limpa a memória a cada 5 requisições
+    if request_counter % 5 == 0:
+        gc.collect()
+
+    return response
 
 @app.get('/')
 def index():
@@ -17,8 +30,8 @@ def index():
             if "badges" in message["author"]:
                 message["author"]["badges"] = message["author"]["badges"][0]["title"]
 
-            if "emotes" in message:
-                del message["emotes"]
+            # if "emotes" in message:
+            #     del message["emotes"]
 
             # if "message_type" in message:
             #     del message["message_type"]
@@ -27,7 +40,7 @@ def index():
             #     del message["action_type"]
 
             chat_data.append(message)
-        return json.dumps(chat_data, ensure_ascii=False)
+        return jsonify(chat_data)
     except Exception as e:
         return json.dumps({"error": str(e)}, ensure_ascii=False)
 
