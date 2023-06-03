@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from chat_downloader import ChatDownloader
 import gc
 import json
+import werkzeug.serving
 
 
 app = Flask(__name__)
@@ -20,6 +21,13 @@ def cleanup(response):
         gc.collect()
 
     return response
+
+@app.before_request
+def before_request():
+    # Defina o tempo limite em segundos
+    timeout = 60
+    werkzeug.serving.WSGIRequestHandler.protocol_version = "HTTP/1.1"
+    werkzeug.serving.WSGIRequestHandler.handler_class.timeout = timeout
 
 @app.get('/')
 def index():
