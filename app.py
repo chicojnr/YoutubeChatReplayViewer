@@ -6,6 +6,8 @@ import json
 
 app = Flask(__name__)
 
+request_counter = 0  # Contador de requisições
+
 @app.after_request
 def cleanup(response):
     global request_counter
