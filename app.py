@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from chat_downloader import ChatDownloader
+from pytube import YouTube
 import gc
 import json
 
@@ -24,6 +25,20 @@ def cleanup(response):
 @app.get('/')
 def index():
     try:
+        video = YouTube(f'https://www.youtube.com/watch?v=' + request.args.get('id'))
+
+        # Obter dados do vídeo
+        title = video.title
+        thumb = video.thumbnail_url
+        publish_date = video.publish_date
+        views = video.views
+        duration = video.length
+
+        # Obter dados do canal
+        channel_title = video.author
+        
+
+
         chat = ChatDownloader().get_chat("https://www.youtube.com/watch?v=" + request.args.get('id'), message_groups=['messages', 'superchat'])
         chat_data = []
         for message in chat:
@@ -42,7 +57,19 @@ def index():
             #     del message["action_type"]
 
             chat_data.append(message)
-        return jsonify(chat_data)
+
+        data = {
+            "video": {
+                "title": title,
+                "publish_date": publish_date,
+                "views": views,
+                "channel_title": channel_title,
+                "thumb": thumb,
+                "duration": duration
+            },
+            "chat": chat_data
+        }
+        return jsonify(data)
     except Exception as e:
         return json.dumps({"error": str(e)}, ensure_ascii=False)
 
