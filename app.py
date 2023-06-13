@@ -25,7 +25,7 @@ def cleanup(response):
 @app.get('/')
 def index():
     try:
-        video = YouTube(f'https://www.youtube.com/watch?v=' + request.args.get('id'))
+        video = YouTube('https://www.youtube.com/watch?v=' + request.args.get('id'))
 
         
         title = video.title
