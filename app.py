@@ -3,8 +3,10 @@ from chat_downloader import ChatDownloader
 from pytube import YouTube
 import gc
 import json
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 request_counter = 0  # Contador de requisições
 

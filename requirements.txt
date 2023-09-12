@@ -2,3 +2,4 @@ flask
 gunicorn
 chat-downloader
 pytube
+flask-cors
